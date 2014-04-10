@@ -9,11 +9,13 @@
 #include "quiver_matrix.h"
 #include "equiv_quiver_matrix.h"
 #include "underlying_graph.h"
+#include "equiv_underlying_graph.h"
 #include <unistd.h>
 
 using cluster::EquivQuiverMatrix;
 using cluster::QuiverMatrix;
 using cluster::UnderlyingGraph;
+using cluster::EquivUnderlyingGraph;
 
 void graph_trim(std::istream & istream, std::ostream & ostream) {
 	typedef std::shared_ptr<UnderlyingGraph> gr_ptr;
@@ -48,19 +50,23 @@ void trim(std::istream & istream, std::ostream & ostream) {
 
 	typedef std::shared_ptr<UnderlyingGraph> gr_ptr;
 	typedef std::shared_ptr<EquivQuiverMatrix> eq_ptr;
+	typedef std::shared_ptr<EquivUnderlyingGraph> greq_ptr;
 	std::unordered_set<eq_ptr> set;
 	std::unordered_set<gr_ptr> gr_set;
-	std::unordered_set<gr_ptr> sm_set;
+	std::unordered_set<greq_ptr> sm_set;
 	std::string str;
 
 	while(std::getline(istream, str)) {
-		eq_ptr m = std::make_shared<EquivQuiverMatrix>(str);
-		gr_ptr graph = std::make_shared<UnderlyingGraph>(*m);
-		if(gr_set.insert(graph).second
-				&& set.insert(m).second
-				&& sm_set.insert(graph).second ) {
-			/* Matrix successfully inserted so has not been seen before. */
-			ostream << *m << std::endl;
+		if(str[0] == '{') {
+			eq_ptr m = std::make_shared<EquivQuiverMatrix>(str);
+			gr_ptr graph = std::make_shared<UnderlyingGraph>(*m);
+			greq_ptr egr = std::make_shared<EquivUnderlyingGraph>(*m);
+			if(gr_set.insert(graph).second
+					&& set.insert(m).second
+					&& sm_set.insert(egr).second ) {
+				/* Matrix successfully inserted so has not been seen before. */
+				ostream << *m << std::endl;
+			}
 		}
 	}
 }
@@ -101,7 +107,7 @@ int run(std::string sfile, bool equiv, bool graph) {
 
 int main(int argc, char *argv[]) {
 	bool equiv = true;
-	bool graph = false;
+	bool graph = true;
 	std::string ifile;
 	int c;
 
