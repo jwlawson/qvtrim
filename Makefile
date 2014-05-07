@@ -7,7 +7,8 @@
 
 # define any compile-time flags
 # Using cygwin -std=gnu++11 should be used rather than -std=c++11
-CXXFLAGS = -Wall -std=gnu++11 -march=native -g #-O3
+CXXFLAGS = -Wall -std=gnu++11 -march=native
+OPT = -g -O3
 
 # Specify base directory
 BASE_DIR = .
@@ -62,7 +63,7 @@ MAIN = qvtrim
 all:    $(MAIN)
 
 $(MAIN): $(OBJS) 
-	$(CXX) $(CXXFLAGS) $(INCLUDES) -o $(MAIN) $(OBJS) $(LFLAGS) $(LIBS)
+	$(CXX) $(CXXFLAGS) $(OPT) $(INCLUDES) -o $(MAIN) $(OBJS) $(LFLAGS) $(LIBS)
 
 # this is a suffix replacement rule for building .o's from .c's
 # it uses automatic variables $<: the name of the prerequisite of
@@ -70,10 +71,10 @@ $(MAIN): $(OBJS)
 # (see the gnu make manual section about automatic variables)
 	
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cc 
-	$(CXX) $(CXXFLAGS) $(INCLUDES) -c $<  -o $@
+	$(CXX) $(CXXFLAGS) $(OPT) $(INCLUDES) -c $<  -o $@
 	
 $(OBJ_DIR)/%.o: $(TEST_DIR)/%.cc 
-	$(CXX) $(CXXFLAGS) $(INCLUDES) -c $<  -o $@
+	$(CXX) $(CXXFLAGS) $(OPT) $(INCLUDES) -c $<  -o $@
 
 clean:
 	$(RM) *.o *~ $(MAIN) $(OBJ_DIR)/*.o
