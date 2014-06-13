@@ -8,11 +8,11 @@
 #include <memory>
 #include <unordered_set>
 
-#include "equiv_quiver_matrix.h"
-#include "equiv_underlying_graph.h"
-#include "oriented_cycle_info.h"
-#include "quiver_matrix.h"
-#include "underlying_graph.h"
+#include "qv/equiv_quiver_matrix.h"
+#include "qv/equiv_underlying_graph.h"
+#include "qv/oriented_cycle_info.h"
+#include "qv/quiver_matrix.h"
+#include "qv/underlying_graph.h"
 
 using cluster::EquivQuiverMatrix;
 using cluster::EquivUnderlyingGraph;
