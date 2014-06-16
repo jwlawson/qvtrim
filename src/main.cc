@@ -96,12 +96,29 @@ void try_function(bool cycle, bool equiv, bool graph, std::istream & istream = s
 	}
 }
 
+void try_function_out_only(bool cycle, bool equiv, bool graph, 
+		std::ostream & ostream = std::cout) {
+	if(cycle) {
+		run_function(cycle_trim, std::cin, ostream);
+	} else if (equiv) {
+		run_function(equiv_trim, std::cin, ostream);
+	}else if (graph) {
+		run_function(graph_trim, std::cin, ostream);
+	}
+}
 
 int run(std::string sfile, std::string ofile, bool cycle, bool equiv, bool graph) {
 	if(sfile.empty() && ofile.empty()) {
 		try_function(cycle, equiv, graph);
 	} else if (sfile.empty()){
-
+		std::ofstream file_out;
+		file_out.open(ofile);
+		if(!file_out.is_open()) {
+			std::cout << "Error opening file "<< ofile << std::endl;
+			return 1;
+		}
+		try_function_out_only(cycle, equiv, graph, file_out);
+		file_out.close();
 	} else if (ofile.empty()) {
 
 		std::ifstream file;
