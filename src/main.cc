@@ -10,6 +10,7 @@
 
 #include "qv/equiv_quiver_matrix.h"
 #include "qv/equiv_underlying_graph.h"
+#include "qv/mass_finite_check.h"
 #include "qv/oriented_cycle_info.h"
 #include "qv/quiver_matrix.h"
 #include "qv/underlying_graph.h"
@@ -78,6 +79,22 @@ void cycle_trim(std::istream & istream, std::ostream & ostream) {
 	}
 }
 
+void class_trim(std::istream& in, std::ostream& out) {
+	typedef cluster::MassFiniteCheck Check;
+	typedef cluster::EquivQuiverMatrix Matrix;
+	Check chk;
+	std::string str;
+
+	while(std::getline(in, str)) {
+		if(str[0] == '{') {
+			Matrix mat(str);
+			chk.is_finite(mat);
+			if(chk.last_new_class()) {
+				out << mat << std::endl;
+			}
+		}
+	}
+}
 
 void run_function(void (*f)(std::istream&, std::ostream&), 
 		std::istream & istream = std::cin, 
@@ -85,31 +102,37 @@ void run_function(void (*f)(std::istream&, std::ostream&),
 	f(istream, ostream);
 }
 
-void try_function(bool cycle, bool equiv, bool graph, std::istream & istream = std::cin,
+void try_function(bool cycle, bool equiv, bool graph, bool clazz,
+		std::istream & istream = std::cin,
 		std::ostream & ostream = std::cout) {
 	if(cycle) {
 		run_function(cycle_trim, istream, ostream);
 	} else if (equiv) {
 		run_function(equiv_trim, istream, ostream);
-	}else if (graph) {
+	} else if (graph) {
 		run_function(graph_trim, istream, ostream);
+	} else if (clazz) {
+		run_function(class_trim, istream, ostream);
 	}
 }
 
-void try_function_out_only(bool cycle, bool equiv, bool graph, 
+void try_function_out_only(bool cycle, bool equiv, bool graph, bool clazz,
 		std::ostream & ostream = std::cout) {
 	if(cycle) {
 		run_function(cycle_trim, std::cin, ostream);
 	} else if (equiv) {
 		run_function(equiv_trim, std::cin, ostream);
-	}else if (graph) {
+	} else if (graph) {
 		run_function(graph_trim, std::cin, ostream);
+	} else if (clazz) {
+		run_function(class_trim, std::cin, ostream);
 	}
 }
 
-int run(std::string sfile, std::string ofile, bool cycle, bool equiv, bool graph) {
+int run(std::string sfile, std::string ofile, bool cycle, bool equiv,
+		bool graph, bool clazz) {
 	if(sfile.empty() && ofile.empty()) {
-		try_function(cycle, equiv, graph);
+		try_function(cycle, equiv, graph, clazz);
 	} else if (sfile.empty()){
 		std::ofstream file_out;
 		file_out.open(ofile);
@@ -117,7 +140,7 @@ int run(std::string sfile, std::string ofile, bool cycle, bool equiv, bool graph
 			std::cout << "Error opening file "<< ofile << std::endl;
 			return 1;
 		}
-		try_function_out_only(cycle, equiv, graph, file_out);
+		try_function_out_only(cycle, equiv, graph, clazz, file_out);
 		file_out.close();
 	} else if (ofile.empty()) {
 
@@ -127,7 +150,7 @@ int run(std::string sfile, std::string ofile, bool cycle, bool equiv, bool graph
 			std::cout << "Error opening file "<< sfile << std::endl;
 			return 1;
 		}
-		try_function(cycle, equiv, graph, file);
+		try_function(cycle, equiv, graph, clazz, file);
 		file.close();
 	} else {
 		/* Using file provided. */
@@ -143,7 +166,7 @@ int run(std::string sfile, std::string ofile, bool cycle, bool equiv, bool graph
 			std::cout << "Error opening file "<< ofile << std::endl;
 			return 1;
 		}
-		try_function(cycle, equiv, graph, file, file_out);
+		try_function(cycle, equiv, graph, clazz, file, file_out);
 		file.close();
 		file_out.close();
 	}
@@ -151,10 +174,11 @@ int run(std::string sfile, std::string ofile, bool cycle, bool equiv, bool graph
 }
 
 void usage() {
-	std::cout << "qvtrim -ceg [-i input] [-o output]" << std::endl;
+	std::cout << "qvtrim -cegl [-i input] [-o output]" << std::endl;
 	std::cout << "  -c Only show matrices with different oriented cycles " << std::endl;
 	std::cout << "  -e Only show matrices which are equivalent up to permutation" << std::endl;
 	std::cout << "  -g Only show matrices with different underlying graphs" << std::endl;
+	std::cout << "  -l Only show matrices from different mutation classes" << std::endl;
 	std::cout << "  -i Specify input file of matrices, if absent stdin is used." << std::endl;
 	std::cout << "  -o Specify output or use stdout" << std::endl;
 }
@@ -163,11 +187,12 @@ int main(int argc, char *argv[]) {
 	bool equiv = false;
 	bool graph = false;
 	bool cycle = false;
+	bool clazz = false;
 	std::string ifile;
 	std::string ofile;
 	int c;
 
-	while ((c = getopt (argc, argv, "cegi:o:")) != -1) {
+	while ((c = getopt (argc, argv, "cegli:o:")) != -1) {
 		switch (c){
 			case 'c':
 				cycle = true;
@@ -177,6 +202,9 @@ int main(int argc, char *argv[]) {
 				break;
 			case 'g':
 				graph = true;
+				break;
+			case 'l':
+				clazz = true;
 				break;
 			case 'i':
 				ifile = optarg;
@@ -193,6 +221,6 @@ int main(int argc, char *argv[]) {
 		}
 	}
 
-	return run(ifile, ofile, cycle, equiv, graph);
+	return run(ifile, ofile, cycle, equiv, graph, clazz);
 }
 
