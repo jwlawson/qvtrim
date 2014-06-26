@@ -1,10 +1,3 @@
-#
-# 'make depend' uses makedepend to automatically generate dependencies 
-#               (dependencies are added to end of Makefile)
-# 'make'        build executable file 'mycc'
-# 'make clean'  removes all .o and executable files
-#
-
 # define any compile-time flags
 # Using cygwin -std=gnu++11 should be used rather than -std=c++11
 CXXFLAGS = -Wall -std=gnu++11 -march=native
@@ -26,7 +19,7 @@ INCLUDES = -I$(HOME)/include
 # define library paths in addition to /usr/lib
 #   if I wanted to include libraries not in /usr/lib I'd specify
 #   their path using -Lpath, something like: -L/home/newhall/lib
-LFLAGS = -L$(HOME)/lib \
+LFLAGS = -L$(HOME)/lib
 
 # define any libraries to link into executable:
 #   if I want to link in libraries (libx.so or libx.a) I use the -llibname
@@ -52,12 +45,6 @@ OBJS = $(patsubst $(SRC_DIR)/%,$(OBJ_DIR)/%,$(_OBJS))
 # define the executable file
 MAIN = qvtrim
 
-#
-# The following part of the makefile is generic; it can be used to
-# build any executable just by changing the definitions above and by
-# deleting dependencies appended to the file from 'make depend'
-#
-
 .PHONY: clean
 
 all:    $(MAIN)
@@ -71,10 +58,10 @@ $(MAIN): $(OBJS)
 # (see the gnu make manual section about automatic variables)
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cc
-	$(CXX) $(CXXFLAGS) $(OPT) $(INCLUDES) -c $<  -o $@
+	$(CXX) $(CXXFLAGS) $(OPT) $(INCLUDES) -c $< -o $@
 
 $(OBJ_DIR)/%.o: $(TEST_DIR)/%.cc
-	$(CXX) $(CXXFLAGS) $(OPT) $(INCLUDES) -c $<  -o $@
+	$(CXX) $(CXXFLAGS) $(OPT) $(INCLUDES) -c $< -o $@
 
 clean:
 	$(RM) *.o *~ $(MAIN) $(OBJ_DIR)/*.o
