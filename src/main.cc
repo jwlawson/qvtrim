@@ -62,17 +62,26 @@ void graph_trim(std::istream & istream, std::ostream & ostream) {
 
 void cycle_trim(std::istream & istream, std::ostream & ostream) {
 
-	std::unordered_set<EquivQuiverMatrix> set;
-	std::unordered_set<OrientedCycleInfo> cycle_set;
+	typedef cluster::EquivQuiverMatrix Matrix;
+	typedef std::shared_ptr<Matrix> MatrixPtr;
+	typedef cluster::OrientedCycleInfo Cycle;
+	typedef cluster::EquivUnderlyingGraph Graph;
+
+	std::unordered_set<MatrixPtr> set;
+	std::unordered_set<Cycle> cycle_set;
+	std::unordered_set<Graph> graph_set;
 	std::string str;
 
 	while(std::getline(istream, str)) {
 		if(str[0] == '{') {
-			EquivQuiverMatrix m(str);
+			MatrixPtr m = std::make_shared<Matrix>(str);
 			if(set.insert(m).second) {
-				if(cycle_set.emplace(m).second) {
+				if(cycle_set.emplace(*m).second) {
 					/* Matrix successfully inserted so has not been seen before. */
-					ostream << m << std::endl;
+					graph_set.emplace(*m);
+					ostream << *m << std::endl;
+				} else if(graph_set.emplace(*m).second) {
+					ostream << *m << std::endl;
 				}
 			}
 		}
