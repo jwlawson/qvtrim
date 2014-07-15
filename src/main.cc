@@ -32,7 +32,7 @@ int main(int argc, char *argv[]) {
 	int c;
 	int size = -1;
 
-	while ((c = getopt (argc, argv, "cegls:zm:i:o:")) != -1) {
+	while ((c = getopt (argc, argv, "cegls::zm:i:o:")) != -1) {
 		switch (c){
 			case 'c':
 				func = qvtrim::CYCLE;
@@ -48,7 +48,9 @@ int main(int argc, char *argv[]) {
 				break;
 			case 's':
 				func = qvtrim::SIZE;
-				size = std::atoi(optarg);
+				if(optarg) {
+					size = std::atoi(optarg);
+				}
 				break;
 			case 'z':
 				func = qvtrim::ZERO;

@@ -24,7 +24,7 @@ class MatrixTrimmer : public Trimmer {
 	protected:
 		MatrixTrimmer(MatrixPtr& matrix, IPtr& in, OPtr& out)
 			:	Trimmer(in, out),
-				matrix_(std::move(matrix)),
+				matrix_(matrix),
 				iter_(*in_) {}
 
 		MatrixPtr matrix_;

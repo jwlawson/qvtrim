@@ -43,6 +43,8 @@ void TrimmerBuilder::matrix(const std::string& mat) {
 std::shared_ptr<Trimmer> TrimmerBuilder::build() {
 	if(!validate()) {
 		// TODO Panic!
+	 std::cerr << "Invalid options" << std::endl;
+	 exit(3);
 	}
 	if(matrix_.empty()) {
 		/* Just a regular trimmer needed */
@@ -74,6 +76,7 @@ std::shared_ptr<Trimmer> TrimmerBuilder::trimmer() {
 			break;
 		case UNSET:
 			// Should never happen
+			exit(4);
 			break;
 	}
 	return nullptr;
@@ -108,6 +111,7 @@ std::shared_ptr<Trimmer> TrimmerBuilder::matrix_trimmer() {
 		case ZERO:
 		case UNSET:
 			// Should never happen
+			exit(4);
 			break;
 	}
 	return nullptr;
@@ -118,7 +122,7 @@ bool TrimmerBuilder::validate() {
 	if(func_ == UNSET) {
 		return false;
 	}
-	if(func_ == SIZE && size_ < 0) {
+	if(func_ == SIZE && matrix_.empty() && size_ < 0) {
 		return false;
 	}
 	if(!in_) {
