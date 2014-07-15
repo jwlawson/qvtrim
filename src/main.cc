@@ -12,13 +12,14 @@
 #include "trimmer_builder.h"
 
 void usage() {
-	std::cout << "qvtrim -ceglz [-s size] [-i input] [-o output]" << std::endl;
+	std::cout << "qvtrim -ceglz [-s size] [-m matrix] [-i input] [-o output]" << std::endl;
 	std::cout << "  -c Only show matrices with different oriented cycles " << std::endl;
 	std::cout << "  -e Only show matrices which are equivalent up to permutation" << std::endl;
 	std::cout << "  -g Only show matrices with different underlying graphs" << std::endl;
 	std::cout << "  -l Only show matrices from different mutation classes" << std::endl;
 	std::cout << "  -s Only show matrices of the specified size" << std::endl;
 	std::cout << "  -z Only show matrices which do not contain an all zero row" << std::endl;
+	std::cout << "  -m Specify the matrix to compare against" << std::endl;
 	std::cout << "  -i Specify input file of matrices, if absent stdin is used." << std::endl;
 	std::cout << "  -o Specify output or use stdout" << std::endl;
 }
@@ -27,10 +28,11 @@ int main(int argc, char *argv[]) {
 	enum qvtrim::Function func = qvtrim::UNSET;
 	std::string ifile;
 	std::string ofile;
+	std::string matrix;
 	int c;
 	int size = -1;
 
-	while ((c = getopt (argc, argv, "cegls:zi:o:")) != -1) {
+	while ((c = getopt (argc, argv, "cegls:zm:i:o:")) != -1) {
 		switch (c){
 			case 'c':
 				func = qvtrim::CYCLE;
@@ -50,6 +52,9 @@ int main(int argc, char *argv[]) {
 				break;
 			case 'z':
 				func = qvtrim::ZERO;
+				break;
+			case 'm':
+				matrix = optarg;
 				break;
 			case 'i':
 				ifile = optarg;
@@ -96,6 +101,10 @@ int main(int argc, char *argv[]) {
 
 		builder.function(func);
 		builder.size(size);
+
+		if(!matrix.empty()) {
+			builder.matrix(matrix);
+		}
 
 		/**
 		 * Do the hard work...

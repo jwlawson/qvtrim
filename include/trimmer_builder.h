@@ -6,6 +6,8 @@
 #include "function.h"
 #include "trimmer.h"
 
+#include <string>
+
 namespace qvtrim {
 
 class TrimmerBuilder {
@@ -18,6 +20,7 @@ class TrimmerBuilder {
 		void output_stream(std::ostream& out);
 		void function(enum Function func);
 		void size(int size);
+		void matrix(const std::string& mat);
 
 		std::shared_ptr<Trimmer> build();
 
@@ -26,8 +29,12 @@ class TrimmerBuilder {
 		OPtr out_;
 		enum Function func_ = UNSET;
 		int size_ = -1;
+		std::string matrix_;
 
 		bool validate();
+
+		std::shared_ptr<Trimmer> trimmer();
+		std::shared_ptr<Trimmer> matrix_trimmer();
 
 		struct NullDeleter {
 			void operator()(const void *const) const {}

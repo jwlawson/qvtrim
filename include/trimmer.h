@@ -19,7 +19,9 @@ class Trimmer {
 		virtual void run() = 0;
 
 	protected:
-		Trimmer(IStream& in, OStream& out);
+		Trimmer(IStream& in, OStream& out)
+			:	in_(&in, NullDeleter()),
+				out_(&out, NullDeleter()) {}
 		Trimmer(IPtr in, OPtr out)
 			: in_(in), out_(out) {}
 
