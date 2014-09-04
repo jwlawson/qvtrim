@@ -64,7 +64,7 @@ $(OBJ_DIR)/%.o: $(TEST_DIR)/%.cc
 	$(CXX) $(CXXFLAGS) $(OPT) $(INCLUDES) -c $< -o $@
 
 clean:
-	$(RM) *.o *~ $(MAIN) $(OBJ_DIR)/*.o
+	$(RM) *.o *~ $(OBJ_DIR)/*.o
 
 depend: $(SRCS)
 	makedepend $(INCLUDES) $^
