@@ -24,8 +24,10 @@
 #include "cycle_trimmer.h"
 #include "equiv_matrix_trimmer.h"
 #include "equiv_trimmer.h"
+#include "finite_trimmer.h"
 #include "graph_matrix_trimmer.h"
 #include "graph_trimmer.h"
+#include "infinite_trimmer.h"
 #include "size_matrix_trimmer.h"
 #include "size_trimmer.h"
 #include "zero_trimmer.h"
@@ -75,8 +77,14 @@ std::shared_ptr<Trimmer> TrimmerBuilder::trimmer() {
 		case EQUIV:
 			return std::make_shared<EquivTrimmer>(in_, out_);
 			break;
+		case FIN:
+			return std::make_shared<FiniteTrimmer>(in_, out_);
+			break;
 		case GRAPH:
 			return std::make_shared<GraphTrimmer>(in_, out_);
+			break;
+		case INFIN:
+			return std::make_shared<InfiniteTrimmer>(in_, out_);
 			break;
 		case CLASS:
 			return std::make_shared<ClassTrimmer>(in_, out_);
@@ -121,9 +129,12 @@ std::shared_ptr<Trimmer> TrimmerBuilder::matrix_trimmer() {
 		case SIZE:
 			return std::make_shared<SizeMatrixTrimmer>(m1, in_, out_);
 			break;
+		case FIN:
+		case INFIN:
 		case ZERO:
 		case UNSET:
 			// Should never happen
+			std::cerr << "Invalid options" << std::endl;
 			exit(4);
 			break;
 	}

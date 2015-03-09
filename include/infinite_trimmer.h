@@ -1,5 +1,5 @@
 /**
- * function.h
+ * infinite_trimmer.h
  * Copyright 2014-2015 John Lawson
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,12 +15,29 @@
  * limitations under the License.
  */
 /**
- * Enum containing the possible trimmers to use.
+ * Trims matrices by only outputting those which are mutation-infinite.
  */
 #pragma once
 
+#include "trimmer.h"
+
+#include "qv/equiv_quiver_matrix.h"
+#include "qv/mass_finite_check.h"
+
 namespace qvtrim {
+class InfiniteTrimmer : public __Trimmer<cluster::EquivQuiverMatrix> {
 
-enum Function{ UNSET, CYCLE, EQUIV, FIN, GRAPH, INFIN, CLASS, SIZE, ZERO};
+	public:
+		InfiniteTrimmer(IStream& in, OStream& out);
+		InfiniteTrimmer(IPtr in, OPtr out)	: __Trimmer(in, out) {}
+		virtual ~InfiniteTrimmer() = default;
 
+	private:
+		typedef cluster::MassFiniteCheck Check;
+
+		Check chk_;
+
+		virtual bool valid(MatrixPtr) final;
+};
 }
+

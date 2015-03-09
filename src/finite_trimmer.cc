@@ -1,5 +1,5 @@
 /**
- * function.h
+ * finite_trimmer.cc
  * Copyright 2014-2015 John Lawson
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,13 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/**
- * Enum containing the possible trimmers to use.
- */
-#pragma once
+#include "finite_trimmer.h"
 
 namespace qvtrim {
-
-enum Function{ UNSET, CYCLE, EQUIV, FIN, GRAPH, INFIN, CLASS, SIZE, ZERO};
-
+bool FiniteTrimmer::valid(MatrixPtr p) {
+	return chk_.is_finite(*p);
 }
+}
+

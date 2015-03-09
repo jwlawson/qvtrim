@@ -44,6 +44,9 @@ $(MAIN): $(OBJS)
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cc $(INC_DIR)/%.h
 	$(CXX) $(CXXFLAGS) $(OPT) $(INCLUDES) -c $< -o $@
 
+./build/main.o: $(SRC_DIR)/main.cc
+	$(CXX) $(CXXFLAGS) $(OPT) $(INCLUDES) -c $< -o $@
+
 $(OBJS): | $(OBJ_DIR)
 
 $(OBJ_DIR):
