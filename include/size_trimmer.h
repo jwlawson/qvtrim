@@ -21,19 +21,20 @@
 
 #include "trimmer.h"
 
+#include "qv/int_matrix.h"
+
 namespace qvtrim {
 
-class SizeTrimmer : public Trimmer {
-
+class SizeTrimmer : public __Trimmer<cluster::IntMatrix> {
 	public:
-		SizeTrimmer(int size, IStream& in, OStream& out);
+		SizeTrimmer(int size, IStream& in, OStream& out)
+			: __Trimmer(in, out), size_(size) {}
 		SizeTrimmer(int size, IPtr in, OPtr out)
-			: Trimmer(in, out), size_(size) {}
-
-		virtual void run();
+			: __Trimmer(in, out), size_(size) {}
+		virtual ~SizeTrimmer() = default;
 
 	private:
 		int size_;
-
+		virtual bool valid(MatrixPtr) final;
 };
 }

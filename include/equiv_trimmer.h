@@ -21,15 +21,21 @@
 
 #include "trimmer.h"
 
+#include <unordered_set>
+
+#include "qv/equiv_quiver_matrix.h"
+
 namespace qvtrim {
 
-class EquivTrimmer : public Trimmer {
+class EquivTrimmer : public __Trimmer<cluster::EquivQuiverMatrix> {
 
 	public:
 		EquivTrimmer(IStream& in, OStream& out);
-		EquivTrimmer(IPtr in, OPtr out) : Trimmer(in, out) {}
+		EquivTrimmer(IPtr in, OPtr out) : __Trimmer(in, out) {}
+		virtual ~EquivTrimmer() = default;
+	private:
+		std::unordered_set<MatrixPtr> set_;
 
-		virtual void run();
-
+		virtual bool valid(MatrixPtr) final;
 };
 }

@@ -21,17 +21,23 @@
 
 #include "trimmer.h"
 
-namespace qvtrim {
+#include "qv/equiv_quiver_matrix.h"
+#include "qv/mass_finite_check.h"
 
-class ClassTrimmer : public Trimmer {
+namespace qvtrim {
+class ClassTrimmer : public __Trimmer<cluster::EquivQuiverMatrix> {
 
 	public:
 		ClassTrimmer(IStream& in, OStream& out);
-		ClassTrimmer(IPtr in, OPtr out)
-			: Trimmer(in, out) {}
+		ClassTrimmer(IPtr in, OPtr out)	: __Trimmer(in, out) {}
+		virtual ~ClassTrimmer() = default;
 
-		virtual void run();
+	private:
+		typedef cluster::MassFiniteCheck Check;
 
+		Check chk_;
+
+		virtual bool valid(MatrixPtr) final;
 };
 }
 

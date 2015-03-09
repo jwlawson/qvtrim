@@ -21,15 +21,16 @@
 
 #include "trimmer.h"
 
+#include "qv/int_matrix.h"
+
 namespace qvtrim {
 
-class ZeroTrimmer : public Trimmer {
-
+class ZeroTrimmer : public __Trimmer<cluster::IntMatrix> {
 	public:
-		ZeroTrimmer(IStream& in, OStream& out);
-		ZeroTrimmer(IPtr in, OPtr out) : Trimmer(in, out) {}
-
-		virtual void run();
-
+		ZeroTrimmer(IStream& in, OStream& out) : __Trimmer(in, out) {}
+		ZeroTrimmer(IPtr in, OPtr out) : __Trimmer(in, out) {}
+		virtual ~ZeroTrimmer() = default;
+	private:
+		virtual bool valid(MatrixPtr) final;
 };
 }

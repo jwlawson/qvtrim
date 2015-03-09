@@ -22,16 +22,28 @@
 
 #include "trimmer.h"
 
+#include <unordered_set>
+
+#include "qv/equiv_quiver_matrix.h"
+#include "qv/equiv_underlying_graph.h"
+#include "qv/oriented_cycle_info.h"
+
 namespace qvtrim {
 
-class CycleTrimmer : public Trimmer {
+class CycleTrimmer : public __Trimmer<cluster::EquivQuiverMatrix> {
 
 	public:
 		CycleTrimmer(IStream& in, OStream& out);
-		CycleTrimmer(IPtr in, OPtr out)
-			: Trimmer(in, out) {}
+		CycleTrimmer(IPtr in, OPtr out) : __Trimmer(in, out) {}
+		virtual ~CycleTrimmer() = default;
+	private:
+		typedef cluster::OrientedCycleInfo Cycle;
+		typedef cluster::EquivUnderlyingGraph Graph;
 
-		virtual void run();
+		std::unordered_set<MatrixPtr> set_;
+		std::unordered_set<Cycle> cycle_set_;
+		std::unordered_set<Graph> graph_set_;
 
+		virtual bool valid(MatrixPtr) final;
 };
 }

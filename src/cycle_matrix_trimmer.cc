@@ -17,16 +17,9 @@
 #include "cycle_matrix_trimmer.h"
 
 namespace qvtrim {
-
-CycleMatrixTrimmer::CycleMatrixTrimmer(MatrixPtr& matrix, IPtr& in,
-		OPtr& out)
-	: MatrixTrimmer(matrix, in, out),
-		cycle_(*matrix) {}
-
-bool CycleMatrixTrimmer::valid(const MatrixPtr& matrix) const {
+bool CycleMatrixTrimmer::valid(MatrixPtr matrix) {
 	Cycle g(*matrix);
 	return cycle_.equals(g);
 }
-
 }
 

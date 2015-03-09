@@ -21,10 +21,10 @@
 #pragma once
 
 #include <memory>
-#include <string>
+
+#include "qv/stream_iterator.h"
 
 namespace qvtrim {
-
 class Trimmer {
 	protected:
 		typedef std::istream IStream;
@@ -32,20 +32,47 @@ class Trimmer {
 		typedef std::shared_ptr<IStream> IPtr;
 		typedef std::shared_ptr<OStream> OPtr;
 
-	public:
-		virtual void run() = 0;
-
-	protected:
 		Trimmer(IStream& in, OStream& out)
 			:	in_(&in, NullDeleter()),
 				out_(&out, NullDeleter()) {}
 		Trimmer(IPtr in, OPtr out)
 			: in_(in), out_(out) {}
+		virtual ~Trimmer() = default;
 
 		IPtr in_;
 		OPtr out_;
+	public:
+		virtual void run() = 0;
+	private:
+		/**
+		 * Deleter for the StreamPtr. As the pointer is always made from
+		 * references to input streams they should not be deleted after the
+		 * shared_ptr goes out of scope. This deleter actually does nothing when
+		 * the shared_ptr determines that it should be deleted.
+		 */
+		struct NullDeleter {
+			void operator()(const void *const) const {}
+		};
+};
+
+template<class Matrix>
+class __Trimmer : public Trimmer {
+	public:
+		virtual void run() final;
+	protected:
+		typedef typename std::shared_ptr<Matrix> MatrixPtr;
+		__Trimmer(IStream& in, OStream& out)
+			:	Trimmer(in, out),
+				iter_(in) {}
+		__Trimmer(IPtr in, OPtr out)
+			: Trimmer(in, out), iter_(*in) {}
+		virtual ~__Trimmer() = default;
+
+		virtual bool valid(MatrixPtr) = 0;
 
 	private:
+		typedef cluster::StreamIterator<Matrix> Iter;
+		Iter iter_;
 		/**
 		 * Deleter for the StreamPtr. As the pointer is always made from
 		 * references to input streams they should not be deleted after the

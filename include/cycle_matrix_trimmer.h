@@ -27,19 +27,17 @@
 namespace qvtrim {
 
 class CycleMatrixTrimmer : public MatrixTrimmer<cluster::IntMatrix> {
+	public:
+		CycleMatrixTrimmer(MatrixPtr& matrix, IPtr& in, OPtr& out)
+			: MatrixTrimmer(matrix, in, out),
+			  cycle_(*matrix) {}
+		virtual ~CycleMatrixTrimmer() = default;
+
+	protected:
+		virtual bool valid(MatrixPtr mat) final;
 
 	private:
 		typedef cluster::OrientedCycleInfo Cycle;
-
-	public:
-		CycleMatrixTrimmer(MatrixPtr& matrix, IPtr& in, OPtr& out);
-
-	protected:
-		virtual bool valid(const MatrixPtr& mat) const final;
-
-	private:
 		Cycle cycle_;
 };
-
 }
-

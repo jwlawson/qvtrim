@@ -27,19 +27,16 @@
 namespace qvtrim {
 
 class GraphMatrixTrimmer : public MatrixTrimmer<cluster::IntMatrix> {
-
+	public:
+		GraphMatrixTrimmer(MatrixPtr& matrix, IPtr& in, OPtr& out)
+			: MatrixTrimmer(matrix, in, out),
+			  graph_(*matrix) {}
+		virtual ~GraphMatrixTrimmer() = default;
+	protected:
+		virtual bool valid(MatrixPtr mat) final;
 	private:
 		typedef cluster::EquivUnderlyingGraph Graph;
-
-	public:
-		GraphMatrixTrimmer(MatrixPtr& matrix, IPtr& in, OPtr& out);
-
-	protected:
-		virtual bool valid(const MatrixPtr& mat) const final;
-
-	private:
 		Graph graph_;
 };
-
 }
 

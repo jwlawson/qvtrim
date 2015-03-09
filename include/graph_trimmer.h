@@ -22,15 +22,30 @@
 
 #include "trimmer.h"
 
+#include <unordered_set>
+
+#include "qv/equiv_quiver_matrix.h"
+#include "qv/equiv_underlying_graph.h"
+#include "qv/underlying_graph.h"
+
 namespace qvtrim {
 
-class GraphTrimmer : public Trimmer {
+class GraphTrimmer : public __Trimmer<cluster::EquivQuiverMatrix> {
 
 	public:
-		GraphTrimmer(IStream& in, OStream& out);
-		GraphTrimmer(IPtr in, OPtr out) : Trimmer(in, out) {}
+		GraphTrimmer(IStream& in, OStream& out) : __Trimmer(in, out) {}
+		GraphTrimmer(IPtr in, OPtr out) : __Trimmer(in, out) {}
+		virtual ~GraphTrimmer() = default;
+	private:
+		typedef cluster::EquivUnderlyingGraph EquivGraph;
+		typedef cluster::UnderlyingGraph Graph;
+		typedef std::shared_ptr<Graph> GPtr;
+		typedef std::shared_ptr<EquivGraph> EGPtr;
 
-		virtual void run();
+		std::unordered_set<MatrixPtr> m_set_;
+		std::unordered_set<GPtr> g_set_;
+		std::unordered_set<EGPtr> eg_set_;
 
+		virtual bool valid(MatrixPtr) final;
 };
 }

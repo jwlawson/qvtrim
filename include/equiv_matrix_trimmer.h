@@ -28,12 +28,12 @@ namespace qvtrim {
 class EquivMatrixTrimmer : public MatrixTrimmer<cluster::EquivQuiverMatrix> {
 
 	public:
-		EquivMatrixTrimmer(MatrixPtr& matrix, IPtr& in, OPtr& out);
+		EquivMatrixTrimmer(MatrixPtr& matrix, IPtr& in, OPtr& out)
+			: MatrixTrimmer(matrix, in, out) {}
+		virtual ~EquivMatrixTrimmer() = default;
 
 	protected:
-		virtual bool valid(const MatrixPtr& mat) const final;
-
+		virtual bool valid(MatrixPtr mat) final;
 };
-
 }
 

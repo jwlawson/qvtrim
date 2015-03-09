@@ -27,19 +27,18 @@
 namespace qvtrim {
 
 class ClassMatrixTrimmer : public MatrixTrimmer<cluster::EquivQuiverMatrix> {
+	public:
+		ClassMatrixTrimmer(MatrixPtr& matrix, IPtr& in, OPtr& out)
+			: MatrixTrimmer(matrix, in, out),
+			  class_(*matrix) {}
+		virtual ~ClassMatrixTrimmer() = default;
+
+	protected:
+		virtual bool valid(MatrixPtr mat) final;
 
 	private:
 		typedef cluster::MutationClass Class;
-
-	public:
-		ClassMatrixTrimmer(MatrixPtr& matrix, IPtr& in, OPtr& out);
-
-	protected:
-		virtual bool valid(const MatrixPtr& mat) const final;
-
-	private:
 		Class class_;
 };
-
 }
 

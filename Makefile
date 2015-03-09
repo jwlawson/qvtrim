@@ -8,6 +8,7 @@ BASE_DIR = .
 
 # Specify source directory
 SRC_DIR = $(BASE_DIR)/src
+INC_DIR = $(BASE_DIR)/include
 
 # define the output directory for .o
 OBJ_DIR = $(BASE_DIR)/build
@@ -40,7 +41,7 @@ all:    $(MAIN)
 $(MAIN): $(OBJS)
 	$(CXX) $(CXXFLAGS) $(OPT) $(INCLUDES) -o $(MAIN) $(OBJS) $(LFLAGS) $(LIBS)
 
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cc
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cc $(INC_DIR)/%.h
 	$(CXX) $(CXXFLAGS) $(OPT) $(INCLUDES) -c $< -o $@
 
 $(OBJS): | $(OBJ_DIR)

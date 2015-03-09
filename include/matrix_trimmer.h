@@ -22,32 +22,23 @@
 
 #include "trimmer.h"
 
-#include "qv/stream_iterator.h"
-
 namespace qvtrim {
 
 template<class Matrix>
-class MatrixTrimmer : public Trimmer {
+class MatrixTrimmer : public __Trimmer<Matrix> {
 	protected:
-		typedef cluster::StreamIterator<Matrix> Iter;
-		typedef std::shared_ptr<Matrix> MatrixPtr;
-
-	public:
-		virtual void run() final;
-
-	protected:
+		typedef std::istream IStream;
+		typedef std::ostream OStream;
+		typedef std::shared_ptr<IStream> IPtr;
+		typedef std::shared_ptr<OStream> OPtr;
+		typedef typename std::shared_ptr<Matrix> MatrixPtr;
 		MatrixTrimmer(MatrixPtr& matrix, IPtr& in, OPtr& out)
-			:	Trimmer(in, out),
-				matrix_(matrix),
-				iter_(*in_) {}
+			:	__Trimmer<Matrix>(in, out),
+				matrix_(matrix) {}
+		virtual ~MatrixTrimmer() = default;
 
 		MatrixPtr matrix_;
-
-		virtual bool valid(const MatrixPtr& mat) const = 0;
-
-	private:
-		Iter iter_;
-
+		virtual bool valid(MatrixPtr mat) = 0;
 };
 }
 	

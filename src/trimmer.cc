@@ -1,5 +1,5 @@
 /**
- * equiv_matrix_trimmer.cc
+ * trimmer.h
  * Copyright 2014-2015 John Lawson
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,11 +14,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "equiv_matrix_trimmer.h"
+/**
+ * Abstract class that all trimmers extend. Contains the input and output
+ * streams, so subclasses just implement the Trimmer::valid() method.
+ */
+#include "trimmer.h"
+
+#include "qv/equiv_quiver_matrix.h"
 
 namespace qvtrim {
-bool EquivMatrixTrimmer::valid(MatrixPtr matrix) {
-	return matrix_->equals(*matrix);
+template<class Matrix>
+void __Trimmer<Matrix>::run() {
+	while(iter_.has_next()) {
+		MatrixPtr p = iter_.next();
+		if(valid(p)) {
+			*out_ << *p << std::endl;
+		}
+	}
 }
+template class __Trimmer<cluster::IntMatrix>;
+template class __Trimmer<cluster::EquivQuiverMatrix>;
 }
-

@@ -28,15 +28,16 @@ namespace qvtrim {
 class SizeMatrixTrimmer : public MatrixTrimmer<cluster::IntMatrix> {
 
 	public:
-		SizeMatrixTrimmer(MatrixPtr& matrix, IPtr& in, OPtr& out);
-
+		SizeMatrixTrimmer(MatrixPtr& matrix, IPtr& in, OPtr& out)
+			: MatrixTrimmer(matrix, in, out),
+			  rows_(matrix->num_rows()),
+			  cols_(matrix->num_cols()) {}
+		virtual ~SizeMatrixTrimmer() = default;
 	protected:
-		virtual bool valid(const MatrixPtr& mat) const final;
-
+		virtual bool valid(MatrixPtr mat) final;
 	private:
 		int rows_;
 		int cols_;
 };
-
 }
 
