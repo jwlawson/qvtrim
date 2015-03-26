@@ -30,6 +30,8 @@
 #include "infinite_trimmer.h"
 #include "size_matrix_trimmer.h"
 #include "size_trimmer.h"
+#include "sinksource_matrix_trimmer.h"
+#include "sinksource_trimmer.h"
 #include "zero_trimmer.h"
 
 
@@ -57,7 +59,6 @@ void TrimmerBuilder::matrix(const std::string& mat) {
 
 std::shared_ptr<Trimmer> TrimmerBuilder::build() {
 	if(!validate()) {
-		// TODO Panic!
 	 std::cerr << "Invalid options" << std::endl;
 	 exit(3);
 	}
@@ -91,6 +92,9 @@ std::shared_ptr<Trimmer> TrimmerBuilder::trimmer() {
 			break;
 		case SIZE:
 			return std::make_shared<SizeTrimmer>(size_, in_, out_);
+			break;
+		case SINK:
+			return std::make_shared<SinkSourceTrimmer>(in_, out_);
 			break;
 		case ZERO:
 			return std::make_shared<ZeroTrimmer>(in_, out_);
@@ -129,6 +133,12 @@ std::shared_ptr<Trimmer> TrimmerBuilder::matrix_trimmer() {
 		case SIZE:
 			return std::make_shared<SizeMatrixTrimmer>(m1, in_, out_);
 			break;
+		case SINK:
+			{ /* Braces keep the scope right. */
+			EMatrix m2 = std::make_shared<cluster::EquivQuiverMatrix>(*m1);
+			return std::make_shared<SinkSourceMatrixTrimmer>(m2, in_, out_);
+			break;
+			}
 		case FIN:
 		case INFIN:
 		case ZERO:

@@ -5,12 +5,13 @@ Removes duplicate matrices from an input.
 ### Usage
 
 ```
-qvtrim -ceglz [-s size] [-m matrix] [-i input] [-o output]
+qvtrim -cegklrz [-s size] [-m matrix] [-i input] [-o output]
   -c Only show matrices with different oriented cycles 
-  -e Only show matrices which are equivalent up to permutation
+  -e Only show matrices which are not equivalent up to permutation
   -g Only show matrices with different underlying graphs
   -k Only show matrices which are mutation-infinite
-  -l Only show matrices from different mutation classes
+  -r Only show matrices not equivalent up to sink-source mutations
+	-l Only show matrices from different mutation classes
   -s Only show matrices of the specified size
   -z Only show matrices which do not contain an all zero row
   -m Specify the matrix to compare against
@@ -18,7 +19,7 @@ qvtrim -ceglz [-s size] [-m matrix] [-i input] [-o output]
   -o Specify output or use stdout
 ```
 
-The `cegklsz` options specify how matrixes are trimmed from the input.
+The `cegklrsz` options specify how matrixes are trimmed from the input.
 
  * `-c` Check the oriented cycles in the quiver. If a quiver contains the same
 	 combination of cycles as one previously seen then it will not be output.
@@ -28,6 +29,8 @@ The `cegklsz` options specify how matrixes are trimmed from the input.
  * `-k` Check whether the quiver is mutation-infinite.
  * `-l` Check whether the quiver belongs to a different mutation class. This
 	 option will lead to a single representative of each class being output.
+ * `-r` Check whether the quiver is a sequence of sink-source mutations form any
+	 quiver seen before.
  * `-s size` Check whether the quiver has `size` vertices.
  * `-z` Check whether the matrix contains a zero row and only output it if it
 	 does *not*. This ensure that the output only contains matrices without zero
@@ -41,6 +44,8 @@ the following.
  * `-e` Only output quivers which are permutations of `M`.
  * `-g` Only output quivers which have the same underlying graph as `M`.
  * `-l` Only output quivers mutation-equivalent to `M`.
+ * `-r` Only output quivers which are sink-source mutations of `M`.
+ * `-s` Only output quivers which are the same size as `M`.
 
 The input option specifies a file to read the matrices from. If left blank then
 stdin is used.

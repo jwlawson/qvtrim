@@ -1,5 +1,5 @@
 /**
- * function.h
+ * sinksource_trimmer.h
  * Copyright 2014-2015 John Lawson
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,21 +15,33 @@
  * limitations under the License.
  */
 /**
- * Enum containing the possible trimmers to use.
+ * Trims matrices by only outputting those not sink-source equivalent to any
+ * seen before.
  */
 #pragma once
 
+#include "trimmer.h"
+
+#include <unordered_set>
+
+#include "qv/equiv_quiver_matrix.h"
+#include "qv/move_class_loader.h"
+
 namespace qvtrim {
-enum Function{
-	UNSET,
-	CYCLE,
-	EQUIV,
-	FIN,
-	GRAPH,
-	INFIN,
-	CLASS,
-	SIZE,
-	ZERO,
-	SINK
+class SinkSourceTrimmer : public __Trimmer<cluster::EquivQuiverMatrix> {
+
+	public:
+		SinkSourceTrimmer(IStream& in, OStream& out);
+		SinkSourceTrimmer(IPtr in, OPtr out)	: __Trimmer(in, out) {}
+		virtual ~SinkSourceTrimmer() = default;
+
+	private:
+		typedef cluster::MoveClassLoader Loader;
+		typedef std::unordered_set<MatrixPtr> Set;
+
+		Set _set;
+
+		virtual bool valid(MatrixPtr) final;
 };
 }
+

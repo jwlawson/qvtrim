@@ -1,5 +1,5 @@
 /**
- * function.h
+ * sinksource_trimmer.cc
  * Copyright 2014-2015 John Lawson
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,22 +14,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/**
- * Enum containing the possible trimmers to use.
- */
-#pragma once
+#include "sinksource_trimmer.h"
 
 namespace qvtrim {
-enum Function{
-	UNSET,
-	CYCLE,
-	EQUIV,
-	FIN,
-	GRAPH,
-	INFIN,
-	CLASS,
-	SIZE,
-	ZERO,
-	SINK
-};
+bool SinkSourceTrimmer::valid(MatrixPtr p) {
+	if(_set.find(p) == _set.end()) {
+		Loader l(p, {});
+		while(l.has_next()) {
+			_set.insert(l.next());
+		}
+		return true;
+	}
+	return false;
 }
+}
+
