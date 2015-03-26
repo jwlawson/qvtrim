@@ -15,11 +15,13 @@
  * limitations under the License.
  */
 #include "sinksource_trimmer.h"
+#include <iostream>
 
 namespace qvtrim {
 bool SinkSourceTrimmer::valid(MatrixPtr p) {
 	if(_set.find(p) == _set.end()) {
-		Loader l(p, {});
+		Loader::MoveVec vec;
+		Loader l(p, vec );
 		while(l.has_next()) {
 			_set.insert(l.next());
 		}

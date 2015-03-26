@@ -30,10 +30,12 @@ namespace qvtrim {
 
 class SinkSourceMatrixTrimmer : public MatrixTrimmer<cluster::EquivQuiverMatrix> {
 	public:
+		typedef cluster::MoveClassLoader Loader;
 		SinkSourceMatrixTrimmer(MatrixPtr& matrix, IPtr& in, OPtr& out)
 			: MatrixTrimmer(matrix, in, out),
 			  class_() {
-			cluster::MoveClassLoader l( matrix, {} );
+			Loader::MoveVec vec;
+			Loader l( matrix, vec );
 			while(l.has_next()) {
 				class_.insert(l.next());
 			}
